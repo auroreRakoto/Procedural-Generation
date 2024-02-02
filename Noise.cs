@@ -9,7 +9,7 @@ public static class Noise
     {
         float[,] noiseMap = new float[mapWidth, mapHeight];
 
-        //offset.x = 1f;
+        //offset.y = mapHeight / 2f;
 
         System.Random prng = new System.Random(seed);
         Vector2[] octaveOffsets = new Vector2[octaves];
@@ -34,9 +34,9 @@ public static class Noise
         float halfWidth = (mapWidth + offset.x) / 2;
         float halfHeight = (mapHeight + offset.y) / 2;
 
-        for (int y = (int)offset.y; y < (int)offset.y + mapHeight; y++)
+        for (int y = 0; y < mapHeight; y++)
         {
-            for (int x = (int)offset.x; x < (int)offset.x + mapWidth; x++)
+            for (int x = 0; x < mapWidth; x++)
             {
 
                 float amplitude = 1;
@@ -45,8 +45,8 @@ public static class Noise
 
                 for (int i = 0; i < octaves; i++)
                 {
-                    float sampleX = (x - halfWidth) / scale * frequency + octaveOffsets[i].x;
-                    float sampleY = (y - halfHeight) / scale * frequency + octaveOffsets[i].y;
+                    float sampleX = (x - halfWidth) / scale * frequency;// + octaveOffsets[i].x;
+                    float sampleY = (y - halfHeight) / scale * frequency;// + octaveOffsets[i].y;
 
                     float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 - 1;
                     noiseHeight += perlinValue * amplitude;
@@ -64,18 +64,18 @@ public static class Noise
                     minNoiseHeight = noiseHeight;
                 }
 
-                noiseMap[x - (int)offset.x, y - (int)offset.y] = noiseHeight;
+                noiseMap[x, y] = noiseHeight;
 
 
             }
         }
-
+        Debug.Log(minNoiseHeight);
 
         for (int y = 0; y < mapHeight; y++)
         {
             for (int x = 0; x < mapWidth; x++)
             {
-                noiseMap[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, noiseMap[x, y]);
+                noiseMap[x, y] = Mathf.InverseLerp(-1.5f, 1.5f, noiseMap[x, y]);
             }
         }
 
