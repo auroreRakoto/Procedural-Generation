@@ -9,14 +9,14 @@ public static class Noise
     {
         float[,] noiseMap = new float[mapWidth, mapHeight];
 
-        //offset.y = mapHeight / 2f;
+        
 
         System.Random prng = new System.Random(seed);
         Vector2[] octaveOffsets = new Vector2[octaves];
         for (int i = 0; i < octaves; i++)
         {
-            float offsetX = prng.Next(-100000, 100000) + offset.x;
-            float offsetY = prng.Next(-100000, 100000) + offset.y;
+            float offsetX = prng.Next(-100000, 100000);// + offset.x;
+            float offsetY = prng.Next(-100000, 100000);// + offset.y;
             octaveOffsets[i] = new Vector2(offsetX, offsetY);
         }
 
@@ -30,6 +30,9 @@ public static class Noise
 
         //float halfWidth = mapWidth + offset.x / 2;
         //float halfHeight = mapHeight + offset.y / 2;
+
+        offset.x = - 2 * offset.x;
+        offset.y = 2 * offset.y;
 
         float halfWidth = (mapWidth + offset.x) / 2;
         float halfHeight = (mapHeight + offset.y) / 2;
@@ -45,8 +48,8 @@ public static class Noise
 
                 for (int i = 0; i < octaves; i++)
                 {
-                    float sampleX = (x - halfWidth) / scale * frequency;// + octaveOffsets[i].x;
-                    float sampleY = (y - halfHeight) / scale * frequency;// + octaveOffsets[i].y;
+                    float sampleX = (x - halfWidth) / scale * frequency + octaveOffsets[i].x;
+                    float sampleY = (y - halfHeight) / scale * frequency + octaveOffsets[i].y;
 
                     float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 - 1;
                     noiseHeight += perlinValue * amplitude;
